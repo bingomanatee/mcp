@@ -1,3 +1,4 @@
 import Worker from './Worker';
-
-export { Worker };
+import StateDef from './StateDef';
+import MCP from './MCP';
+export { Worker, StateDef, MCP };
