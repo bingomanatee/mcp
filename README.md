@@ -50,8 +50,8 @@ import {MCP} from "mcp"
 
 let chessPieceState = new MCP("inbox");
 
-chessPieceState.mcpFromState("inbox").mcpChangeState("onboard");
-chessPieceState.mcpFromState("onboard")
+chessPieceState.mcpWhen("inbox").mcpStateIs("onboard");
+chessPieceState.mcpFromState("onboard").mcpWhen("taken").mcpStateIs("captured");
 
 ```
 
@@ -119,6 +119,34 @@ a very rich vocabulary of observational technique.
 *although it might be useful in combination with the state 
 -- a rat letting a country song run its course indicates that the rat likes country, 
 similarly with rock, but the lever data is kind of redundant with this information.
+
+## Limiting Transitions
+
+There are two types of transition rules: unqualified actions and qualified actions.
+
+Actions that can be taken no matter what the current state (as all the ones above, 
+for the rats) are unqualified. 
+
+Actions whose effects require that the mcp be in a particular state are qualified. 
+
+for instance, you can only wake up when you are asleep, and you can only go to sleep
+when you are awake. so: 
+
+``` javascript
+
+var sleeper = new MCP();
+
+sleeper.mcpWhen('start').mcpStateIs('awake'); // an unqualified startup action
+sleeper.mcpFromState('awake').mcpWhen('goToSleep').mcpStateIs('asleep') // qualified 
+	   .mcpFromState('sleep').mcpWhen('wakeUp').mcpStateIs('awake');
+	   
+sleeper.start();
+
+sleeper.goToSleep();
+console.log('sleeper state:', sleeper.mcpState); // 'asleep';
+sleeper.wakeUp();
+console.log('sleeper state:', sleeper.mcpState); // 'awake';
+```
 
 ### A note on method names
 

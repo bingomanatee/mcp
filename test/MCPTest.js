@@ -61,6 +61,43 @@ export default t => {
 			aeTest.end();
 		});
 
+		mcpTest.test('qualified actions', qTest => {
+			var sleeper = new MCP();
+
+			sleeper.mcpWhen('start').mcpStateIs('awake'); // an unqualified startup action
+			sleeper.mcpFromState('awake').mcpWhen('goToSleep').mcpStateIs('asleep').mcpDone();// qualified
+			sleeper.mcpFromState('awake').mcpWhen('drive').mcpStateIs('driving').mcpDone();
+			sleeper.mcpFromState('driving').mcpWhen('park').mcpStateIs('awake').mcpDone();
+			sleeper.mcpFromState('asleep').mcpWhen('wakeUp').mcpStateIs('awake');
+			console.log('sleeper!', require('util').inspect(sleeper, {depth: 5}));
+			sleeper.start();
+			qTest.same(sleeper.mcpState, 'awake', 'starting made us awake');
+			sleeper.goToSleep();
+			qTest.same(sleeper.mcpState, 'asleep', 'go to sleep put us asleep');
+			try {
+				sleeper.drive();
+			} catch(err) {
+				qTest.same(err.message, 'cannot handle action drive from asleep');
+			}
+			qTest.same(sleeper.mcpState, 'asleep', 'driving didn\'t work');
+			qTest.ok(sleeper.mcpIsErrored, 'in an errored state');
+
+			sleeper.wakeUp();
+			qTest.same(sleeper.mcpState, 'asleep', 'waking didn\'t work because we are errored');
+			// note - state machine is broken at this point because of the attempt to drive;
+			sleeper.mcpRecoverFromError();
+			qTest.notOk(sleeper.mcpIsErrored, 'mcpRecoverFromError worked');
+			sleeper.wakeUp();
+			qTest.same(sleeper.mcpState, 'awake', 'waking works now');
+
+			sleeper.drive();
+			qTest.same(sleeper.mcpState, 'driving', 'we can drive now without crashing');
+			sleeper.park().goToSleep();
+			qTest.same(sleeper.mcpState, 'asleep', 'we can sleep after we park');
+
+			qTest.end();
+		});
+
 		mcpTest.test("properties", seTest => {
 
 			let m = new MCP();

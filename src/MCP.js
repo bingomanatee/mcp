@@ -89,7 +89,9 @@ export default class MCP {
 		//@TODO: good name tests.
 
 		this._lastAction = actionName;
-		this.mcpFromStates(pFromStates); // either wipes the from filter or
+		if (pFromStates) {
+			this.mcpFromStates(pFromStates);
+		} // either wipes the from filter or
 		// sets the from filter to the parameter.
 		if (pState) {
 			return this.changeState(pState);
@@ -98,11 +100,12 @@ export default class MCP {
 		}
 	}
 
-	mcpFromState(pState) {
+	mcpFromState() {
 		if (this._mcpHasErrored) {
 			return this;
 		}
-		return this.mcpFromStates(pState);
+		let states = Array.prototype.slice.call(arguments);
+		return this.mcpFromStates.apply(this, states);
 	}
 
 	mcpFromStates() {
@@ -110,6 +113,8 @@ export default class MCP {
 			return this;
 		}
 		let states = Array.prototype.slice.call(arguments);
+		console.log('mcpFromStates: ', states, 'flattened to ', flattenArray(states));
+
 		this._lastFromStates = flattenArray(states);
 		return this;
 	}
@@ -208,6 +213,7 @@ export default class MCP {
 		} else {
 			this._cantHandleAction(action);
 		}
+		return this;
 	}
 
 	mcpDone() {
@@ -349,12 +355,21 @@ export default class MCP {
 		return this;
 	}
 
+	mcpRecoverFromError() {
+		this._mcpHasErrored = false;
+		this._lastMCPerror = null;
+	}
+
 	mcpReset() {
 		this._mcpHasErrored = false;
 		this._lastMCPerror = null;
 		this.mcpState = null;
 		Object.assign(this, this._propsInitialValues);
 		return this;
+	}
+
+	get mcpIsErrored () {
+		return this._mcpHasErrored || false;
 	}
 
 	/**
