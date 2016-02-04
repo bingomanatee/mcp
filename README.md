@@ -120,6 +120,17 @@ a very rich vocabulary of observational technique.
 -- a rat letting a country song run its course indicates that the rat likes country, 
 similarly with rock, but the lever data is kind of redundant with this information.
 
+### A note on method names
+
+The MCP class is intended to serve as a foundation for a potentially significantly sized 
+control/model class. As such the mcp external methods are all prefixed with 
+mcp, to differentatiate the constructivve methods from the resulting actions and properties. 
+
+#### MCP?
+
+MCP is the original Master Control Program from Tron, the movie that made me want to
+get into computers in the first place. 
+
 ## License
 
 MIT © [Wonderland Labs](http://www.wonderlandlabs.com)
