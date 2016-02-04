@@ -1,5 +1,6 @@
 import  flattenArray from './utils/flattenArray';
 import TransitionEvent from './utils/TransitionEvent';
+import TransitionWatcher from './utils/TransitionWatcher';
 import MCPHandler from './utils/MCPHandler';
 
 /**
@@ -217,6 +218,42 @@ export default class MCP {
 		return this;
 	}
 
+	/** ***************** OBSERVING ************************* */
+	/**
+	 * there is a lot of nuance to observing things in a fininte state machine.
+	 * you can care about leaving states, entering states, or the actions that cause
+	 * state to be changed --- of a combination of these.
+	 *
+	 * For now we are not caring about overlap conditions.
+	 */
+
+	/**
+	 *
+	 * @param state {string}
+	 * @param handler {function}
+	 */
+	mcpWatchState(state, handler) {
+		this._transitionWatchers.push(new TransitionWatcher(this, handler, state));
+	}
+
+	/**
+	 *
+	 * @param action {string}
+	 * @param handler {function}
+	 */
+	mcpWatchAction(action, handler) {
+		this._transitionWatchers.push(new TransitionWatcher(this, handler, {action: action}));
+	}
+
+	/**
+	 * if you want a nuanced watcher, use your own conditions.
+	 * @param conditions
+	 * @param handler
+	 */
+	mcpWatch(conditions, handler) {
+		this._transitionWatchers.push(new TransitionWatcher(this, handler, conditions));
+	}
+
 	/**
 	 * this is the method when a handler is chosen to initiate
 	 * a transition to another state.
@@ -231,11 +268,9 @@ export default class MCP {
 		if (this._mcpHasErrored) {
 			return;
 		}
-		let oldState = this.mcpState;
-
-		let transition = new TransitionEvent(handler, action, this);
 
 		if (this._transitionWatchers.length) {
+			let event = new TransitionEvent(handler, action, this);
 			this._transitionWatchers.forEach(watcher => watcher.reactTo(event));
 		}
 

@@ -10,25 +10,34 @@ function stateMatch(stateTest, state) {
 				}
 			}
 		} else if (typeof stateTest === 'string') {
-			if (!(stateTest === te.fromState)) {
+			if (!(stateTest === state)) {
 				return false;
 			}
 		}
 	}
+	return true;
 }
 
 class MCPTransitionWatcher {
 
-	constructor(response, conditions) {
+	/**
+	 *
+	 * @param mcp {MCP}
+	 * @param response
+	 * @param conditions
+	 */
+	constructor(mcp, response, conditions) {
+		this.mcp = mcp;
 		this.response = response;
 		this.filtered = false;
 		if (conditions) {
 			if (typeof conditions === 'string') {
+				console.log('setting filter of toState to string', conditions);
 				this.filter.set('toState', conditions);
 				this.filtered = true;
 			} else {
 				if (conditions.hasOwnProperty('action') && conditions.action) {
-					this.filter.set('action', action);
+					this.filter.set('action', conditions.action);
 					this.filtered = true;
 				}
 				if (conditions.hasOwnProperty('fromState') && conditions.fromState) {
@@ -36,16 +45,18 @@ class MCPTransitionWatcher {
 					this.filtered = true;
 				}
 				if (conditions.hasOwnProperty('toState') && conditions.toState) {
-					this.filter.set('toState');
+					this.filter.set('toState', conditions.toState);
 					this.filtered = true;
 				}
 			}
 		}
+
+		console.log('transition watcher created: ', this.toString());
 	}
 
 	get filter() {
 		if (!this._filter) {
-			this._filter = new Set();
+			this._filter = new Map();
 		}
 		return this._filter;
 	}
@@ -84,6 +95,11 @@ class MCPTransitionWatcher {
 			if (!stateMatch(this.filter.get('toState'), te.toState)) {
 				return false;
 			}
+
+			if (te.fromState === te.toState) {
+				// since we care about state -- and the state is not actually CHANGING.....
+				return false;
+			}
 		}
 
 		return true;
@@ -94,4 +110,17 @@ class MCPTransitionWatcher {
 			this.response(te);
 		}
 	}
+
+	toString() {
+		var so = {};
+
+		so.response = this.response.toString();
+		if (this._filter) {
+			this.filter.forEach((value, key) => so[key] = value);
+		}
+
+		return JSON.stringify(so);
+	}
 }
+
+export default MCPTransitionWatcher;
