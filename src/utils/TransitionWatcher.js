@@ -51,7 +51,7 @@ class MCPTransitionWatcher {
 			}
 		}
 
-		console.log('transition watcher created: ', this.toString());
+		// console.log('transition watcher created: ', this.toString());
 	}
 
 	get filter() {
