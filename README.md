@@ -65,6 +65,8 @@ inserted into the logic of the state machine itself.
 
 ### Use case: the rat and the radio. 
 
+![Radio Timeline](docs/state_example.svg)
+
 Scientists want to find out of rats like country western music or rock and roll. They set up a radio to change randomly
 between songs from a collection of country music and rock. (Both provided by k-tel of course.) 
 
