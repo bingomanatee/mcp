@@ -57,5 +57,6 @@
     "tap-spec": "*",
     "tape": "*",
     "watch": "*"
-  }
+  },
+  "dependencies": {}
 }

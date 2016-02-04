@@ -46,14 +46,18 @@ npm i -D mcp
 ## Usage
 
 ```js
-import mcp from "mcp"
+import {MCP} from "mcp"
 
-mcp() // true
+let chessPieceState = new MCP("inbox");
+
+chessPieceState.mcpFromState("inbox").mcpChangeState("onboard");
+chessPieceState.mcpFromState("onboard")
+
 ```
 
 ## License
 
-MIT © [dedelhar](http://wonderlandlabs.com)
+MIT © [dedelhar](http://www.wonderlandlabs.com)
 
 [npm-url]: https://npmjs.org/package/mcp
 [npm-image]: https://img.shields.io/npm/v/mcp.svg?style=flat-square

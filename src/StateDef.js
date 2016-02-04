@@ -30,7 +30,7 @@ export default class StateDef {
 	}
 
 	/**
-	 * rank is an optional concept of how close to the end
+	 * rank is an optional concept of how close to the mcpDone
 	 * your subject is.
 	 * There's no defined scale/range.
 	 * @param r {Number)
