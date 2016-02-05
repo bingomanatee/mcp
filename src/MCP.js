@@ -239,7 +239,7 @@ export default class MCP {
 	 * @param handler {function}
 	 */
 	mcpWatchState(state, handler) {
-		this._transitionWatchers.push(new TransitionWatcher(this, handler, state));
+		return this.mcpWatch(state, handler);
 	}
 
 	/**
@@ -248,7 +248,7 @@ export default class MCP {
 	 * @param handler {function}
 	 */
 	mcpWatchAction(action, handler) {
-		this._transitionWatchers.push(new TransitionWatcher(this, handler, {action: action}));
+		return this.mcpWatch({action: action}, handler);
 	}
 
 	/**
@@ -257,7 +257,18 @@ export default class MCP {
 	 * @param handler
 	 */
 	mcpWatch(conditions, handler) {
-		this._transitionWatchers.push(new TransitionWatcher(this, handler, conditions));
+		const watch = new TransitionWatcher(this, handler, conditions);
+		this._transitionWatchers.push(watch);
+		return watch;
+	}
+
+	mcpUnwatch(watcher) {
+		this._transitionWatchers = this._transitionWatchers.filter(w => (w !== watcher));
+	}
+
+	mcpUnwatchAll() {
+		this._transitionWatchers.forEach(w => w.removed = true);
+		this._transitionWatchers = [];
 	}
 
 	/**
@@ -368,7 +379,7 @@ export default class MCP {
 		return this;
 	}
 
-	get mcpIsErrored () {
+	get mcpIsErrored() {
 		return this._mcpHasErrored || false;
 	}
 
@@ -389,5 +400,7 @@ export default class MCP {
 			throw new Error(message);
 		}
 	}
+
+
 
 }

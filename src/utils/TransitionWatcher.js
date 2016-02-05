@@ -30,6 +30,8 @@ class MCPTransitionWatcher {
 		this.mcp = mcp;
 		this.response = response;
 		this.filtered = false;
+		this.removed = false;
+
 		if (conditions) {
 			if (typeof conditions === 'string') {
 				console.log('setting filter of toState to string', conditions);
@@ -52,6 +54,11 @@ class MCPTransitionWatcher {
 		}
 
 		// console.log('transition watcher created: ', this.toString());
+	}
+
+	destroy() {
+		this.mcp.mcpUnwatch(this);
+		this.removed = true;
 	}
 
 	get filter() {

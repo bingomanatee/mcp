@@ -76,7 +76,7 @@ export default t => {
 			qTest.same(sleeper.mcpState, 'asleep', 'go to sleep put us asleep');
 			try {
 				sleeper.drive();
-			} catch(err) {
+			} catch (err) {
 				qTest.same(err.message, 'cannot handle action drive from asleep');
 			}
 			qTest.same(sleeper.mcpState, 'asleep', 'driving didn\'t work');
@@ -136,6 +136,83 @@ export default t => {
 			seTest.equal(m.y, 0, 'staying the same y for east');
 
 			seTest.end();
+		});
+
+		mcpTest.test('watchers', wTest => {
+
+			wTest.test('action watcher', aTest => {
+				let m = new MCP();
+
+				m.mcpWhen('start').mcpStateIs('off')
+						.mcpFromState('off').mcpWhen('turnKey').mcpStateIs('on')
+						.mcpFromState('on').mcpWhen('turnKey').mcpStateIs('off');
+
+
+				var turnKeyTimes = 0;
+
+				let w = m.mcpWatchAction('turnKey', () => ++turnKeyTimes);
+
+				m.start();
+
+				aTest.equal(turnKeyTimes, 0, 'starts at 0 times');
+				m.turnKey();
+				aTest.equal(turnKeyTimes, 1, 'found one turn');
+				m.turnKey();
+				aTest.equal(turnKeyTimes, 2, 'found one turn');
+				m.turnKey();
+				aTest.equal(turnKeyTimes, 3, 'found one turn');
+
+				w.destroy();
+
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+
+				aTest.equal(turnKeyTimes, 3, 'watching is stopped');
+
+				aTest.end();
+			});
+
+			wTest.test('state watcher', sTest => {
+				let m = new MCP();
+
+				m.mcpWhen('start').mcpStateIs('off')
+						.mcpFromState('off').mcpWhen('turnKey').mcpStateIs('on')
+						.mcpFromState('on').mcpWhen('turnKey').mcpStateIs('off');
+
+
+				var onTimes = 0;
+
+				let w = m.mcpWatchState('on', () => ++onTimes);
+
+				m.start();
+
+				sTest.equal(onTimes, 0, 'starts at 0 times');
+				m.turnKey();
+				sTest.equal(onTimes, 1, 'found one on');
+				m.turnKey();
+				sTest.equal(onTimes, 1, 'found one on');
+				m.turnKey();
+				sTest.equal(onTimes, 2, 'found one on');
+
+				w.destroy();
+
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+				m.turnKey();
+
+				sTest.equal(onTimes, 2, 'watching is stopped');
+
+				sTest.end();
+			});
+
+			wTest.end();
 		});
 
 		mcpTest.end();
