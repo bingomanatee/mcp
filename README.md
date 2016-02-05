@@ -120,6 +120,29 @@ a very rich vocabulary of observational technique.
 -- a rat letting a country song run its course indicates that the rat likes country, 
 similarly with rock, but the lever data is kind of redundant with this information.
 
+### Cancelling watches
+
+`mcpWatch*` method return the instance of TransitionWatcher that is used to enable watching.
+To stop watching, capture that watcher and call its' `destroy()` method.
+
+``` javascript
+let m = new MCP();
+m.mcpWhen('start').mcpStateIs('off')
+		.mcpFromState('off').mcpWhen('turnKey').mcpStateIs('on')
+		.mcpFromState('on').mcpWhen('turnKey').mcpStateIs('off');
+
+var turnKeyTimes = 0;
+let w = m.mcpWatchAction('turnKey', () => ++turnKeyTimes);
+m.start();
+m.turnKey(); // turnKeyTimes === 1
+w.destroy();
+
+m.turnKey();
+m.turnKey(); // turnKeyTimes still === 1;
+```
+
+To clear all watchers, call `mcpInstance.mcpUnwatchAll()`;
+
 ## Limiting Transitions
 
 There are two types of transition rules: unqualified actions and qualified actions.
