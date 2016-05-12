@@ -9,3 +9,7 @@
 ### v1.0.0
 
  * mcp initial commit.
+
+### v1.3.2
+
+ * altered docs to remove misleading examples of chained watchers.

@@ -87,13 +87,13 @@ var ratAdvancesRock = 0;
 radio.mcpWhen('leverhit').mcpStateIs('nextsong')
   .mcpWhen('choosecountry').mcpStateIs('countryplaying')
   .mcpWhen('chooserock').mcpStateIs('rockplaying')
-  .mcpWhen('songOver').mcpStateIs('nextSong')
+  .mcpWhen('songOver').mcpStateIs('nextSong');
   
-  .mcpWatchState('nextsong', () => {
+radio.mcpWatchState('nextsong', () => {
   	if (Math.random() > 0.5) mcp.chooseeCountry()
   	else mcp.chooseRock();
-  })
-  .mcpWatchAction('leverHit', () => {
+  });
+radio.mcpWatchAction('leverHit', () => {
   	if (mcp.mcpState === 'countryplaying') {
   	++ ratAdvancesCountry;
   	} else if (mcp.mcpState === 'rockPlaying') {
@@ -102,6 +102,8 @@ radio.mcpWhen('leverhit').mcpStateIs('nextsong')
   }) 
 ```
 
+note, watchers do NOT chain; this is because they return the watcher, not the state instance.
+
 this example shows both the utility of watching actions (the rat hitting the lever, which is data, 
 whereas the song just running out is not useful to the study*) and states (a song change, which
 triggers a random song selection) 
@@ -109,8 +111,8 @@ triggers a random song selection)
 Even more specific watchers can be used instead of the last watcher:
 
 ``` javascript
-radio.mcpWatch({action: 'leverHit', fromState: 'countryplaying'} () => ++ ratAdvancesCountry)
-     .mcpWatch({action: 'leverHit', fromState: 'rockPlaying'}    () => ++ ratAdvancesRodck);
+radio.mcpWatch({action: 'leverHit', fromState: 'countryplaying'} () => ++ ratAdvancesCountry);
+radio.mcpWatch({action: 'leverHit', fromState: 'rockPlaying'}    () => ++ ratAdvancesRodck);
 ```
 
 This very compressed use of the event system shows how nuanced use of the event watchers can express
