@@ -1,6 +1,6 @@
 {
   "name": "mcp",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "a flow control system for JS/Node.js",
   "main": "dist/index.js",
   "files": [

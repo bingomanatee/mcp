@@ -34,7 +34,7 @@ class MCPTransitionWatcher {
 
 		if (conditions) {
 			if (typeof conditions === 'string') {
-				console.log('setting filter of toState to string', conditions);
+
 				this.filter.set('toState', conditions);
 				this.filtered = true;
 			} else {
@@ -52,8 +52,6 @@ class MCPTransitionWatcher {
 				}
 			}
 		}
-
-		// console.log('transition watcher created: ', this.toString());
 	}
 
 	destroy() {

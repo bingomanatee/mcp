@@ -113,7 +113,7 @@ export default class MCP {
 			return this;
 		}
 		let states = Array.prototype.slice.call(arguments);
-		console.log('mcpFromStates: ', states, 'flattened to ', flattenArray(states));
+
 
 		this._lastFromStates = flattenArray(states);
 		return this;
@@ -146,7 +146,7 @@ export default class MCP {
 	 */
 	_makeAction(toState) {
 		const action = this._lastAction;
-		// console.log('_makeAction: ', action, 'from: ', this._lastFromStates, 'to: ', toState);
+
 
 		this._ensureAction(action);
 		this._actions[action].push(new MCPHandler(flattenArray(this._lastFromStates), toState, action));
@@ -291,7 +291,7 @@ export default class MCP {
 			this._transitionWatchers.forEach(watcher => watcher.reactTo(event));
 		}
 
-		//console.log(`changing mcpState to ${handler.toState} because of action ${action}`);
+
 		this.mcpState = handler.toState;
 	}
 
