@@ -1,10 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Changelog
-
-- [v1.0.0](#v100)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### v1.0.0
 
@@ -18,3 +12,8 @@
 
  * removed some stray console.log
  * upgraded eslint config to be compatible with latest eslintrc
+
+### v1.3.4
+
+ * refactored method validation
+ * extended coverage of unsuccessful methods.

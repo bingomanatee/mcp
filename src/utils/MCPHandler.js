@@ -5,32 +5,45 @@
  */
 
 class MCPHandler {
-	/**
-	 *
-	 * @param fromStates [{State}]
-	 * @param toState {String}
-	 * @param action {String}
-	 */
-	constructor(fromStates, toState, action) {
-		this._fromStates = fromStates;
-		this._toState = toState;
-		this.action = action;
-	}
+    /**
+     *
+     * @param fromStates [{State}]
+     * @param toState {String}
+     * @param action {String}
+     */
+    constructor(fromStates, toState, action) {
+        this._fromStates = fromStates;
+        this._toState = toState;
+        this.action = action;
+    }
 
-	/**
-	 *
-	 * @returns [{String}]
-	 */
-	get fromStates() {
-		return this._fromStates;
-	}
+    empty() {
+        return !(this._fromStates && this._fromStates.length);
+    }
 
-	/**
-	 * @returns {String}
-	 */
-	get toState() {
-		return this._toState;
-	}
+    handles(pState) {
+        for (let state of this._fromStates) {
+            if (pState === state) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @returns [{String}]
+     */
+    get fromStates() {
+        return this._fromStates;
+    }
+
+    /**
+     * @returns {String}
+     */
+    get toState() {
+        return this._toState;
+    }
 }
 
 export default MCPHandler;

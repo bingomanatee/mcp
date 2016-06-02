@@ -214,6 +214,41 @@ export default t => {
 
 			wTest.end();
 		});
+        
+        mcpTest.test('errors on unqualified actions', eTest => {
+           eTest.test('no handler for action', nhTest => {
+               let m = new MCP();
+               
+               m.mcpWhen('start').mcpStateIs('foo')
+                   .mcpFromState('foo').mcpWhen('toBar').mcpStateIs('bar')
+                   .mcpWhen('toFoo').mcpStateIs('foo');
+               
+               m.start();
+               
+               nhTest.equal(m.mcpState, 'foo', 'starts at foo');
+               
+               m.toBar();
+               
+               nhTest.equal(m.mcpState, 'bar', 'called once, moves to bar');
+               
+               try {
+                   m.toBar();
+               } catch (err) {
+                   nhTest.equal(err.message, 'cannot handle action toBar from bar', 'registers error when going from bar to bar');
+               }
+               
+               m.toFoo();
+               
+               nhTest.equal(m.mcpState, 'bar', 'once there is an error, state cannot be changed');
+               
+               m.mcpRecoverFromError();
+               m.toFoo();
+               
+               nhTest.equal(m.mcpState, 'foo', 'after recovering from an error, state can be changed');
+
+               nhTest.end();
+           });
+        });
 
 		mcpTest.end();
 	});

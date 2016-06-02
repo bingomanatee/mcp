@@ -1,6 +1,6 @@
 {
   "name": "mcp",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "a flow control system for JS/Node.js",
   "main": "dist/index.js",
   "files": [
@@ -37,7 +37,7 @@
     "mcp",
     "awesome"
   ],
-  "author": "dedelhar <DEdelhart@svb.com>",
+  "author": "dedelhar <dave@manateebay.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bingomanatee/mcp/issues"
